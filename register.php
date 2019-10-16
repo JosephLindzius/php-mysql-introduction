@@ -1,6 +1,6 @@
 <?php
  require "connection.php";
-
+whatIsHappening();
 $emailErr = "";
 $checker = false;
 $passwordMatch = false;
@@ -8,10 +8,12 @@ $passwordMatch = false;
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $required = array("first_name", "last_name", "username", "linkedin", "github", "email", "preferred_language", "avatar", "video", "quote", "quote_author");
 
-    $error = false;
+
     foreach($required as $field) {
         if (empty($_POST[$field])) {
             $error = true;
+        } else {
+            $_SESSION[$field] = $_POST[$field];
         }
     }
 
@@ -19,17 +21,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $emailErr = "$_POST[email] is NOT a valid email address";
     }
 
+    $error = false;
     if ($error) {
         echo "<span class='alert-danger'>All fields are required.</span><br>";
     } else {
         $checker = true;
     }
-        $password = $_POST['password'];
-        $passwordConfirm = $_POST['passwordConfirm'];
 
-
-    if (password_verify($password, $passwordConfirm) === true) {
-        echo 'true';
+    if ($_POST['password'] === $_POST['passwordConfirm']) {
         $passwordMatch = true;
     } else {
         echo "<span class='alert-danger'>Password fields do not match!</span><br>";
@@ -40,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 if ($_SERVER['REQUEST_METHOD'] == "POST" && $checker == true && $passwordMatch == true) {
 
-$sql = "INSERT INTO students (first_name, last_name, username, linkedin, github, email, preferred_language, avatar, video, quote, quote_author) VALUES (:first_name, :last_name, :username, :linkedin, :github, :email, :preferred_language, :avatar, :video, :quote, :quote_author)";
+$sql = "INSERT INTO students (first_name, last_name, username, linkedin, github, email, preferred_language, avatar, video, quote, quote_author, password) VALUES (:first_name, :last_name, :username, :linkedin, :github, :email, :preferred_language, :avatar, :video, :quote, :quote_author, :password)";
 
     if ($pdo->prepare($sql)) {
         echo 'I work<br>';
@@ -57,8 +56,8 @@ $sql = "INSERT INTO students (first_name, last_name, username, linkedin, github,
     $video = $_POST["video"];
     $quote = $_POST["quote"];
     $quote_author = $_POST["quote_author"];
-
-
+    $password = $_POST["password"];
+    $password = password_hash($password, PASSWORD_DEFAULT);
 
         $stmt->bindParam(':first_name', $firstName);
         $stmt->bindParam(':last_name', $lastName);
@@ -71,11 +70,16 @@ $sql = "INSERT INTO students (first_name, last_name, username, linkedin, github,
         $stmt->bindParam(':video', $video);
         $stmt->bindParam(':quote', $quote);
         $stmt->bindParam(':quote_author', $quote_author);
+        $stmt->bindParam(':password', $password);
 
         if($stmt->execute()) {
            unset($_POST);
-           header("Location: ".$_SERVER['REQUEST_URI']);
-            exit;
+        //   unset($_SESSION);
+          //  $query = "SELECT id FROM students WHERE username = $_SESSION[username]";
+            //$data = $pdo->query($query)->fetchAll(PDO::FETCH_ASSOC);
+            //var_dump($data);
+         //  header("Location: ".$_SERVER['REQUEST_URI']);
+           // exit;
         }
 
     }
@@ -112,14 +116,14 @@ $sql = "INSERT INTO students (first_name, last_name, username, linkedin, github,
 <div class="row">
     <form class="form-group col-12" action="register.php" method="post">
         <div class="form-group m-5">
-            <label for="first_name">First Name <input class="form-control" type="text" name="first_name"></label>
-            <label for="last_name">Last Name <input class="form-control" type="text" name="last_name"></label>
-            <label for="username">Username <input class="form-control" type="text" name="username"></label>
+            <label for="first_name">First Name <input class="form-control" type="text" name="first_name" value="<?php if (!empty($_SESSION['first_name'])) {echo $_SESSION['first_name'];}?>"></label>
+            <label for="last_name">Last Name <input class="form-control" type="text" name="last_name" value="<?php if (!empty($_SESSION['last_name'])) {echo $_SESSION['last_name'];}?>"></label>
+            <label for="username">Username <input class="form-control" type="text" name="username" value="<?php if (!empty($_SESSION['username'])) {echo $_SESSION['username'];}?>"></label>
         </div>
         <div class="form-group m-5">
-            <label for="linkedin">LinkedIn <input class="form-control" type="text" name="linkedin"></label>
-            <label for="github">Github <input class="form-control" type="text" name="github"></label>
-            <label for="email">Email <input class="form-control" type="text" name="email"><?php echo "<span class='alert-danger'>";
+            <label for="linkedin">LinkedIn <input class="form-control" type="text" name="linkedin" value="<?php if (!empty($_SESSION['linkedin'])) {echo $_SESSION['linkedin'];}?>"></label>
+            <label for="github">Github <input class="form-control" type="text" name="github" value="<?php if (!empty($_SESSION['github'])) {echo $_SESSION['github'];}?>"></label>
+            <label for="email">Email <input class="form-control" type="text" name="email" value="<?php if (!empty($_SESSION['email'])) {echo $_SESSION['email'];}?>"><?php echo "<span class='alert-danger'>";
                 echo  $emailErr;
                 echo "</span>"; ?></label>
         </div>
@@ -131,19 +135,19 @@ $sql = "INSERT INTO students (first_name, last_name, username, linkedin, github,
                     <option value="fr">French</option>
                 </select>
             </label>
-            <label for="avatar">Avatar <input class="form-control" type="text" name="avatar"></label>
-            <label for="video">Video <input class="form-control" type="text" name="video"></label>
+            <label for="avatar">Avatar <input class="form-control" type="text" name="avatar" value="<?php if (!empty($_SESSION['avatar'])) {echo $_SESSION['avatar'];}?>"></label>
+            <label for="video">Video <input class="form-control" type="text" name="video" value="<?php if (!empty($_SESSION['video'])) {echo $_SESSION['video'];}?>"></label>
         </div>
         <div class="form-group m-5">
-            <label for="quote">Quote <input class="form-control" type="text" name="quote"></label>
-            <label for="quote_author">Quote Author <input class="form-control" type="text" name="quote_author"></label>
+            <label for="quote">Quote <input class="form-control" type="text" name="quote" value="<?php if (!empty($_SESSION['quote'])) {echo $_SESSION['quote'];}?>"></label>
+            <label for="quote_author">Quote Author <input class="form-control" type="text" name="quote_author" value="<?php if (!empty($_SESSION['quote'])) {echo $_SESSION['quote'];}?>"></label>
         </div>
         <div class="form-group m-5">
             <label for="password">Password:
-                <input class="form-control" name="password" type="text" >
+                <input class="form-control" name="password" type="password" >
             </label>
             <label for="password">Confirm Password:
-                <input class="form-control" name="passwordConfirm" type="text" >
+                <input class="form-control" name="passwordConfirm" type="password" >
             </label>
         </div>
         <div class="form-group">
