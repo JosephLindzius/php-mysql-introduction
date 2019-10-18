@@ -1,10 +1,5 @@
 <?php
-require "connection.php";
-
-$query = "SELECT * FROM students WHERE id = $_GET[user]";
-
-$data = $pdo->query($query)->fetchAll(PDO::FETCH_ASSOC);
-$data = $data[0];
+require "auth.php";
 
 ?>
 
@@ -49,8 +44,11 @@ $data = $data[0];
                 echo $data['first_name'];
                 echo " ";
                 echo $data['last_name'];
+                echo '<hr>';
                 ?></h1>
-            <h3 class="  text-light pt-3"><?php echo $data["username"] ?></h3>
+            <h3 class="  text-light pt-3"><?php
+                echo '<br>';
+                echo $data["username"] ?></h3>
         </div>
 
     </section>

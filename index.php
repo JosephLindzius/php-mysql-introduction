@@ -1,7 +1,6 @@
 <?php
 
-require "connection.php";
-
+require "auth.php"
 ?>
 
 <!doctype html>

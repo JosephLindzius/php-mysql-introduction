@@ -1,7 +1,5 @@
-<?php 
-
-require "connection.php";
-
+<?php
+require "auth.php";
 ?>
 
 <!doctype html>
@@ -31,12 +29,12 @@ require "connection.php";
 </header>
 <div class="container">
     <div class="row my-5 p-5">
-        <form class="form-group d-flex flex-column" action="./auth.php">
+        <form class="form-group d-flex flex-column" action="./auth.php" method="post">
             <label for="email">Email:
-                <input class="form-control" name="email" type="text" >
+                <input class="form-control" name="username" type="text" >
             </label>
             <label for="password">Password:
-                <input class="form-control" name="password" type="text" >
+                <input class="form-control" name="password" type="password" >
             </label>
             <input class="btn btn-secondary" type="submit">
         </form>
