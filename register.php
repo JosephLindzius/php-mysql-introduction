@@ -26,48 +26,52 @@ require "auth.php";
         </div>
     </nav>
 </header>
-<body class="container">
-<div class="row">
-    <form class="form-group col-12" action="register.php" method="post">
-        <div class="form-group m-5">
-            <label for="first_name">First Name <input class="form-control" type="text" name="first_name" value="<?php if (!empty($_SESSION['first_name'])) {echo $_SESSION['first_name'];}?>"></label>
-            <label for="last_name">Last Name <input class="form-control" type="text" name="last_name" value="<?php if (!empty($_SESSION['last_name'])) {echo $_SESSION['last_name'];}?>"></label>
-            <label for="username">Username <input class="form-control" type="text" name="username" value="<?php if (!empty($_SESSION['username'])) {echo $_SESSION['username'];}?>"></label>
-        </div>
-        <div class="form-group m-5">
-            <label for="linkedin">LinkedIn <input class="form-control" type="text" name="linkedin" value="<?php if (!empty($_SESSION['linkedin'])) {echo $_SESSION['linkedin'];}?>"></label>
-            <label for="github">Github <input class="form-control" type="text" name="github" value="<?php if (!empty($_SESSION['github'])) {echo $_SESSION['github'];}?>"></label>
-            <label for="email">Email <input class="form-control" type="text" name="email" value="<?php if (!empty($_SESSION['email'])) {echo $_SESSION['email'];}?>"><?php echo "<span class='alert-danger'>";
-                echo  $emailErr;
-                echo "</span>"; ?></label>
-        </div>
-        <div class="form-group m-5">
-            <label for="preferred_language">Preferred Language
-                <select class="form-control" name="preferred_language">
-                    <option value="en">English</option>
-                    <option value="nl">Nederlands</option>
-                    <option value="fr">French</option>
-                </select>
-            </label>
-            <label for="avatar">Avatar <input class="form-control" type="text" name="avatar" value="<?php if (!empty($_SESSION['avatar'])) {echo $_SESSION['avatar'];}?>"></label>
-            <label for="video">Video <input class="form-control" type="text" name="video" value="<?php if (!empty($_SESSION['video'])) {echo $_SESSION['video'];}?>"></label>
-        </div>
-        <div class="form-group m-5">
-            <label for="quote">Quote <input class="form-control" type="text" name="quote" value="<?php if (!empty($_SESSION['quote'])) {echo $_SESSION['quote'];}?>"></label>
-            <label for="quote_author">Quote Author <input class="form-control" type="text" name="quote_author" value="<?php if (!empty($_SESSION['quote'])) {echo $_SESSION['quote'];}?>"></label>
-        </div>
-        <div class="form-group m-5">
-            <label for="password">Password:
-                <input class="form-control" name="password" type="password" >
-            </label>
-            <label for="password">Confirm Password:
-                <input class="form-control" name="passwordConfirm" type="password" >
-            </label>
-        </div>
-        <div class="form-group">
-            <input class="form-control btn btn-primary" type="submit">
-        </div>
-    </form>
+<body>
+<div class="container">
+    <div class="row">
+        <form class="form-group col-12" action="register.php" method="post">
+            <div class="form-group m-5">
+                <label for="first_name">First Name <input class="form-control" type="text" name="first_name" value="<?php if (!empty($_SESSION['first_name'])) {echo $_SESSION['first_name'];}?>"></label>
+                <label for="last_name">Last Name <input class="form-control" type="text" name="last_name" value="<?php if (!empty($_SESSION['last_name'])) {echo $_SESSION['last_name'];}?>"></label>
+                <label for="username">Username <input class="form-control" type="text" name="username" value="<?php if (!empty($_SESSION['username'])) {echo $_SESSION['username'];}?>"></label>
+            </div>
+            <div class="form-group m-5">
+                <label for="linkedin">LinkedIn <input class="form-control" type="text" name="linkedin" value="<?php if (!empty($_SESSION['linkedin'])) {echo $_SESSION['linkedin'];}?>"></label>
+                <label for="github">Github <input class="form-control" type="text" name="github" value="<?php if (!empty($_SESSION['github'])) {echo $_SESSION['github'];}?>"></label>
+                <label for="email">Email <input class="form-control" type="text" name="email" value="<?php if (!empty($_SESSION['email'])) {echo $_SESSION['email'];}?>"><?php echo "<span class='alert-danger'>";
+                    echo  $emailErr;
+                    echo "</span>"; ?></label>
+            </div>
+            <div class="form-group m-5">
+                <label for="preferred_language">Preferred Language
+                    <select class="form-control" name="preferred_language">
+                        <option value="en">English</option>
+                        <option value="nl">Nederlands</option>
+                        <option value="fr">French</option>
+                    </select>
+                </label>
+                <label for="avatar">Avatar <input class="form-control" type="text" name="avatar" value="<?php if (!empty($_SESSION['avatar'])) {echo $_SESSION['avatar'];}?>"></label>
+                <label for="video">Video <input class="form-control" type="text" name="video" value="<?php if (!empty($_SESSION['video'])) {echo $_SESSION['video'];}?>"></label>
+            </div>
+            <div class="form-group m-5">
+                <label for="quote">Quote <input class="form-control" type="text" name="quote" value="<?php if (!empty($_SESSION['quote'])) {echo $_SESSION['quote'];}?>"></label>
+                <label for="quote_author">Quote Author <input class="form-control" type="text" name="quote_author" value="<?php if (!empty($_SESSION['quote'])) {echo $_SESSION['quote'];}?>"></label>
+            </div>
+            <div class="form-group m-5">
+                <label for="password">Password:
+                    <input class="form-control" name="password" type="password" >
+                </label>
+                <label for="password">Confirm Password:
+                    <input class="form-control" name="passwordConfirm" type="password" >
+                </label>
+            </div>
+            <div class="form-group">
+                <input class="form-control btn btn-primary" type="submit">
+            </div>
+        </form>
+    </div>
+
+
 </div>
 
 </body>

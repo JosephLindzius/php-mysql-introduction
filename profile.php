@@ -1,6 +1,36 @@
 <?php
-require "auth.php";
+require "connection.php";
 
+if (empty($_GET)) {
+    $_GET['user'] = 1;
+}
+$sql = "SELECT * FROM students WHERE id = :id";
+$stmt = $pdo->prepare($sql);
+$stmt->execute(['id'=> $_GET['user']]);
+$data = $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
+
+if ($_SESSION['id'] = $_GET['user']) {
+    echo "editable";
+    $edit = true;
+}
+?>
+<form action="profile.php" method="post">
+    <select name="options">
+        <option value="edit">Edit</option>
+        <option value="delete">Delete</option>
+    </select>
+    <input type="submit">
+</form>
+
+<?php
+ if (isset($_POST["options"]) == 'edit') {
+     if ($_SESSION['id'] = $_GET['user'] && $edit = true) {
+         $url = "/profileEdit.php?user=". $_SESSION['id'];
+         header("location: ". $url);
+         exit;
+     }
+
+ }
 ?>
 
 <!doctype html>
@@ -22,7 +52,7 @@ require "auth.php";
 <body>
 <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Home</a>
+        <a class="navbar-brand" href="index.php">Home</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>

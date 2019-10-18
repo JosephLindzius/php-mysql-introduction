@@ -2,45 +2,41 @@
 
 require "connection.php";
 
-whatIsHappening();
 
-if ($_SERVER["SERVER_NAME"].'index.php') {
-    $query = 'SELECT * FROM students';
-    $data = $pdo->query($query)->fetchAll(PDO::FETCH_ASSOC);
+if ($_SERVER['REQUEST_URI'] == "/index.php") {
+    $sql = "SELECT * FROM students";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-if ($_SERVER['SERVER_NAME']."profile.php") {
 
-    //todo check login status for access
-    $query = "SELECT * FROM students WHERE id = $_GET[user]";
-    $data = $pdo->query($query)->fetchAll(PDO::FETCH_ASSOC)[0];
-
-
-}
-
-if ($_SERVER['SERVER_NAME']."login.php") {
+if ($_SERVER['REQUEST_URI'] == "/login.php") {
     if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
-        $username = $_POST["username"];
-        var_dump($username);
+
+
         $password = $_POST["password"];
         $hashPassword = password_hash($password, PASSWORD_DEFAULT);
-        $query = "SELECT username FROM students WHERE username=:username";
-        $usernameDB = selectWHere($pdo, $query,'username', $_POST['username']);
-        $query = "SELECT password FROM students WHERE username=:username";
-        $passwordDB = selectWHere($pdo, $query,'username', $_POST['password']);
-        var_dump($username);
-        var_dump($usernameDB);
-        var_dump($hashPassword);
-        var_dump($passwordDB);
+        $sql = "SELECT password, id FROM students WHERE username=:username";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([ 'username' => $_POST["username"]]);
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
+
+        if (password_verify($data['password'], $hashPassword)) {
+            unset($_POST);
+            $_SESSION["loggedin"] = true;
+            $_SESSION["id"] = $data["id"];
+            $url = "/profile.php?user=". $data["id"];
+            header("location: ". $url);
+            exit;
+        }
+
     }
 
-
-   // header("Location: ./index.php");
-   // exit;
 }
 
-if ($_SERVER['SERVER_NAME']."register.php") {
+if ($_SERVER['REQUEST_URI'] == "/register.php") {
     $emailErr = "";
     $checker = false;
     $passwordMatch = false;
@@ -52,7 +48,7 @@ if ($_SERVER['SERVER_NAME']."register.php") {
             if (empty($_POST[$field])) {
                 $error = true;
             } else {
-                $_SESSION[$field] = $_POST[$field];
+                $_SESSION['postdata'] = $_POST[$field];
             }
             if (htmlspecialchars( "$_POST[$field]")) {
                 $charErr = "$_POST[$field] has used special characters";
@@ -84,7 +80,7 @@ if ($_SERVER['SERVER_NAME']."register.php") {
         $sql = "INSERT INTO students (first_name, last_name, username, linkedin, github, email, preferred_language, avatar, video, quote, quote_author, password) VALUES (:first_name, :last_name, :username, :linkedin, :github, :email, :preferred_language, :avatar, :video, :quote, :quote_author, :password)";
 
         if ($pdo->prepare($sql)) {
-            echo 'I work<br>';
+
             $stmt = $pdo->prepare($sql);
 
             $firstName = $_POST["first_name"];
@@ -115,11 +111,14 @@ if ($_SERVER['SERVER_NAME']."register.php") {
             $stmt->bindParam(':password', $password);
 
             if($stmt->execute()) {
+                echo "added";
                 $query = "SELECT id FROM students WHERE username=:username";
 
                 $userID = selectWHere($pdo, $query,'username', $_POST['username']);
+                $_SESSION["userID"] = $userID['id'];
                 unset($_POST);
-                $url = $_SERVER['HTTP_ORIGIN']."/profile.php?user=". $userID['id'];
+                unset($_SESSION["postdata"]);
+                $url = "/profile.php?user=". $userID['id'];
                 header("location: ". $url);
                 exit;
             }
@@ -129,4 +128,3 @@ if ($_SERVER['SERVER_NAME']."register.php") {
     }
 }
 
-?>
